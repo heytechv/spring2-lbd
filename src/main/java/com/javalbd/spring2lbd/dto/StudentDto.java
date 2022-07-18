@@ -1,13 +1,10 @@
-package com.javalbd.spring2lbd.entity;
+package com.javalbd.spring2lbd.dto;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Entity
-//@Table("Student")
-public class Student {
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+public class StudentDto {
 
-    @Id
-//    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -15,8 +12,11 @@ public class Student {
     private Integer age;
 
 
+
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -41,4 +41,5 @@ public class Student {
     public void setAge(Integer age) {
         this.age = age;
     }
+
 }
