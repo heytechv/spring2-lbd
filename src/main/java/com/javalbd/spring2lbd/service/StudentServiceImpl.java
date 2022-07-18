@@ -5,10 +5,9 @@ import com.javalbd.spring2lbd.dto.StudentDto;
 import com.javalbd.spring2lbd.entity.Student;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +19,8 @@ public class StudentServiceImpl implements StudentService {
         for (Student student : studentList)
             if (Objects.equals(student.getId(), id))
                 return student;
-        return null;
+
+        throw new EntityNotFoundException("Student not found with id=" + id);
     }
 
     @Override public List<Student> findAll() {
@@ -57,20 +57,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override public StudentDto getStudent(Long id) {
-        Student student = findById(id);
-        if (student == null)
-            return null;
-
-        return convertToDto(student);
+        return convertToDto(findById(id));
     }
 
     @Override public void editStudent(Long id, String surname, Integer age) {
         Student student = findById(id);
-
-        // TODO zabezpieczenia/komunikaty
-        if (student == null)
-            return;
-
         student.setSurname(surname);
         student.setAge(age);
     }
@@ -81,19 +72,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override public void assignToSubject(Long studentId, SchoolSubject subject) {
         Student student = findById(studentId);
-        if (student == null)
-            return;
-
         student.addSubject(subject);
     }
 
     @Override public void removeFromSubject(Long studentId, SchoolSubject subject) {
         Student student = findById(studentId);
-        if (student == null)
-            return;
-
         student.removeSubject(subject);
     }
+
 
     /** ------------------------------------------------------------------------------------ **
     /** -- Mapper -------------------------------------------------------------------------- **

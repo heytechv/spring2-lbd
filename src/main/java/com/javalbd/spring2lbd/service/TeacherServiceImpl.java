@@ -8,6 +8,8 @@ import com.javalbd.spring2lbd.entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +28,7 @@ public class TeacherServiceImpl implements TeacherService {
             if (Objects.equals(teacher.getId(), id))
                 return teacher;
 
-        return null;
+        throw new EntityNotFoundException("Teacher not found with id=" + id);
     }
 
     @Override public List<TeacherDto> getAllTeachers() {
@@ -34,22 +36,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override public TeacherDto getTeacher(Long id) {
-        Teacher teacher = findById(id);
-
-        // TODO zabezpieczenia
-        if (teacher == null)
-            return null;
-
-        return convertToDto(teacher);
+        return convertToDto(findById(id));
     }
 
     @Override public SchoolSubject getTeacherClass(Long id) {
-        Teacher teacher = findById(id);
-
-        if (teacher == null)
-            return null;
-
-        return teacher.getSubject();
+        return findById(id).getSubject();
     }
 
     @Override public void addTeacher(Teacher teacher) {
@@ -68,10 +59,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override public void deleteTeacher(Long id) {
         Teacher teacher = findById(id);
-
-        if (teacher == null)
-            return;
-
         teacherList.remove(teacher);
     }
 
