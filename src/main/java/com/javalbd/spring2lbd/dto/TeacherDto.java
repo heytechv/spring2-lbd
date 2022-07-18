@@ -3,16 +3,13 @@ package com.javalbd.spring2lbd.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.javalbd.spring2lbd.component.SchoolSubject;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class StudentDto {
+public class TeacherDto {
 
     private Long id;
     private String name;
     private String surname;
-    private Integer age;
-    private List<SchoolSubject> schoolSubjectList;
+    private SchoolSubject schoolSubject;
 
 
     public Long getId() { return id; }
@@ -24,10 +21,7 @@ public class StudentDto {
     public String getSurname() { return surname; }
     public void setSurname(String surname) { this.surname = surname; }
 
-    public Integer getAge() { return age; }
-    public void setAge(Integer age) { this.age = age; }
-
-    public List<SchoolSubject> getSubjectList() { return schoolSubjectList; }
-    public void setSubjectList(List<SchoolSubject> schoolSubjectList) { this.schoolSubjectList = schoolSubjectList; }
+    public SchoolSubject getSubject() { return schoolSubject; }
+    public void setSubject(SchoolSubject schoolSubject) { this.schoolSubject = schoolSubject; }
 
 }
