@@ -19,22 +19,22 @@ public class Spring2LbdApplication {
     @PostConstruct
     void init() {
         /** Students x10 */
-        studentService.addStudent("St Maciek" , "St Macinski" , 20);
-        studentService.addStudent("St Marek"  , "St Markunski", 25);
-        studentService.addStudent("St Jacek"  , "St Jackunski", 30);
-        studentService.addStudent("St Robert" , "St Robercik" , 28);
-        studentService.addStudent("St Andrzej", "St Suma"     , 20);
+        studentService.addStudent("Maciek" , "Macinski" , 20);
+        studentService.addStudent("Marek"  , "Markunski", 25);
+        studentService.addStudent("Jacek"  , "Jackunski", 30);
+        studentService.addStudent("Robert" , "Robercik" , 28);
+        studentService.addStudent("Andrzej", "Suma"     , 20);
 
-        studentService.addStudent("St Maciek2" , "St Macinski" , 20, SchoolSubject.ALGEBRA, SchoolSubject.LAW);
-        studentService.addStudent("St Marek2"  , "St Markunski", 25, SchoolSubject.BIOLOGY);
-        studentService.addStudent("St Jacek2"  , "St Jackunski", 30, SchoolSubject.ALGEBRA);
-        studentService.addStudent("St Robert2" , "St Robercik" , 28, SchoolSubject.BIOLOGY);
-        studentService.addStudent("St Andrzej2", "St Suma"     , 20, SchoolSubject.LAW, SchoolSubject.BIOLOGY);
+        studentService.addStudent("Maciek2" , "Macinski" , 20, SchoolSubject.ALGEBRA, SchoolSubject.LAW);
+        studentService.addStudent("Marek2"  , "Markunski", 25, SchoolSubject.BIOLOGY);
+        studentService.addStudent("Jacek2"  , "Jackunski", 30, SchoolSubject.ALGEBRA);
+        studentService.addStudent("Robert2" , "Robercik" , 28, SchoolSubject.BIOLOGY);
+        studentService.addStudent("Andrzej2", "Suma"     , 20, SchoolSubject.LAW, SchoolSubject.BIOLOGY);
 
         /** Teachers x3 */
-        teacherService.addTeacher("Te Marcin"   , "Te Siema"     , SchoolSubject.LAW);
-        teacherService.addTeacher("Te Agnieszka", "Te Dowidzenia", SchoolSubject.BIOLOGY);
-        teacherService.addTeacher("Te Patrycja" , "Te Przyst"    , SchoolSubject.ALGEBRA);
+        teacherService.addTeacher("Marcin"   , "Siema"     , SchoolSubject.LAW);
+        teacherService.addTeacher("Agnieszka", "Dowidzenia", SchoolSubject.BIOLOGY);
+        teacherService.addTeacher("Patrycja" , "Przyst"    , SchoolSubject.ALGEBRA);
     }
 
     public static void main(String[] args) {

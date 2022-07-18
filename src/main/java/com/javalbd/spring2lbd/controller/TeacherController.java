@@ -4,6 +4,7 @@ import com.javalbd.spring2lbd.component.SchoolSubject;
 import com.javalbd.spring2lbd.dto.TeacherDto;
 import com.javalbd.spring2lbd.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,18 +17,24 @@ public class TeacherController {
 
 
     @GetMapping("/all")
-    public List<TeacherDto> getTeacherAll() {
-        return teacherService.getAllTeachers();
+    public ResponseEntity<List<TeacherDto>> getTeacherAll() {
+        return ResponseEntity.ok()
+                .header("successful", "true")
+                .body(teacherService.getAllTeachers());
     }
 
     @GetMapping("/getteacher")
-    public TeacherDto getTeacher(@RequestParam("id") Long id) {
-        return teacherService.getTeacher(id);
+    public ResponseEntity<TeacherDto> getTeacher(@RequestParam("id") Long id) {
+        return ResponseEntity.ok()
+                .header("successful", "true")
+                .body(teacherService.getTeacher(id));
     }
 
     @GetMapping("/getteacherclass")
-    public SchoolSubject getTeacherClass(@RequestParam("id") Long id) {
-        return teacherService.getTeacherClass(id);
+    public ResponseEntity<SchoolSubject> getTeacherClass(@RequestParam("id") Long id) {
+        return ResponseEntity.ok()
+                .header("successful", "true")
+                .body(teacherService.getTeacherClass(id));
     }
 
     @PostMapping("/addteacher")
