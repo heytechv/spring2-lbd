@@ -57,6 +57,10 @@ public class TeacherServiceImpl implements TeacherService {
         addTeacher(teacher);
     }
 
+    @Override public void addTeacher(TeacherDto teacherDto) {
+        addTeacher(convertToEntity(teacherDto));
+    }
+
     @Override public void deleteTeacher(Long id) {
         Teacher teacher = findById(id);
         teacherList.remove(teacher);
@@ -81,5 +85,15 @@ public class TeacherServiceImpl implements TeacherService {
         teacherDto.setSurname(teacher.getSurname());
         teacherDto.setSubject(teacher.getSubject());
         return teacherDto;
+    }
+
+    public Teacher convertToEntity(TeacherDto teacherDto) {
+        Teacher teacher = new Teacher();
+        teacher.setId(teacherDto.getId());
+        teacher.setName(teacherDto.getName());
+        teacher.setSurname(teacherDto.getSurname());
+        teacher.setSubject(teacherDto.getSubject());
+        return teacher;
+
     }
 }

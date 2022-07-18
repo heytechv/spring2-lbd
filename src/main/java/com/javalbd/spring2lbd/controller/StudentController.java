@@ -23,13 +23,21 @@ public class StudentController {
                 .body(studentService.getAllStudents());
     }
 
-    @PostMapping("/addstudent")
-    public void addStudent(
-            @RequestParam("name")    String name,
-            @RequestParam("surname") String surname,
-            @RequestParam("age")     Integer age) {
+    @GetMapping("/getstudent")
+    public ResponseEntity<StudentDto> getStudentsAll(@RequestParam("id") Long id) {
+        return ResponseEntity.ok()
+                .header("successful", "true")
+                .body(studentService.getStudent(id));
+    }
 
-        studentService.addStudent(name, surname, age);
+    @PostMapping("/addstudent")
+//    public void addStudent(
+//            @RequestParam("name")    String name,
+//            @RequestParam("surname") String surname,
+//            @RequestParam("age")     Integer age) {
+    public void addStudent(@RequestBody Student student) {
+//        studentService.addStudent(name, surname, age);
+        studentService.addStudent(student);
     }
 
     @PutMapping("/editstudent")
@@ -46,11 +54,5 @@ public class StudentController {
         studentService.deleteStudent(id);
     }
 
-    @GetMapping("/getstudent")
-    public ResponseEntity<StudentDto> getStudentsAll(@RequestParam("id") Long id) {
-        return ResponseEntity.ok()
-                .header("successful", "true")
-                .body(studentService.getStudent(id));
-    }
 
 }

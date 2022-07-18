@@ -14,6 +14,7 @@ public interface TeacherService {
     SchoolSubject getTeacherClass(Long id);
 
     void addTeacher(Teacher teacher);
+    void addTeacher(TeacherDto teacherDto);
     void addTeacher(String name, String surname, SchoolSubject subject);
 
     void deleteTeacher(Long id);

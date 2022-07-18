@@ -2,6 +2,7 @@ package com.javalbd.spring2lbd.controller;
 
 import com.javalbd.spring2lbd.component.SchoolSubject;
 import com.javalbd.spring2lbd.dto.TeacherDto;
+import com.javalbd.spring2lbd.entity.Teacher;
 import com.javalbd.spring2lbd.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +39,12 @@ public class TeacherController {
     }
 
     @PostMapping("/addteacher")
-    public void addTeacher(
-            @RequestParam("name") String name,
-            @RequestParam("surname") String surname,
-            @RequestParam("subject") SchoolSubject subject) {
-
-        teacherService.addTeacher(name, surname, subject);
+//    public void addTeacher(
+//            @RequestParam("name") String name,
+//            @RequestParam("surname") String surname,
+//            @RequestParam("subject") SchoolSubject subject) {
+    public void addTeacher(@RequestBody TeacherDto teacherDto) {
+        teacherService.addTeacher(teacherDto);
     }
 
     @DeleteMapping("/deleteteacher")

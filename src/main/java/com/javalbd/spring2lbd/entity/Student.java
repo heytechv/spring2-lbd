@@ -15,7 +15,7 @@ public class Student {
     private String name;
     private String surname;
     private Integer age;
-    private List<SchoolSubject> schoolSubjectList = new ArrayList<>();
+    private List<SchoolSubject> subjectList = new ArrayList<>();
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -29,9 +29,9 @@ public class Student {
     public Integer getAge() { return age; }
     public void setAge(Integer age) { this.age = age; }
 
-    public List<SchoolSubject> getSubjectList() { return schoolSubjectList; }
-    public void setSubjectList(List<SchoolSubject> schoolSubjectList) { this.schoolSubjectList = schoolSubjectList; }
-    public void addSubject(SchoolSubject subject) { schoolSubjectList.add(subject); }
-    public void removeSubject(SchoolSubject subject) { schoolSubjectList.remove(subject); }
+    public List<SchoolSubject> getSubjectList() { return subjectList; }
+    public void setSubjectList(List<SchoolSubject> schoolSubjectList) { this.subjectList = schoolSubjectList; }
+    public void addSubject(SchoolSubject subject) { subjectList.add(subject); }
+    public void removeSubject(SchoolSubject subject) { subjectList.remove(subject); }
 
 }
