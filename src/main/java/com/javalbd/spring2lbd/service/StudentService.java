@@ -12,6 +12,7 @@ public interface StudentService {
     StudentDto getStudent(Long id);
 
     void addStudent(Student student);
+    void addStudent(StudentDto studentDto);
     void addStudent(String name, String surname, Integer age);
     void addStudent(String name, String surname, Integer age, SchoolSubject... schoolSubjectList);
 

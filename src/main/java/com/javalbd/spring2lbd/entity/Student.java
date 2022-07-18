@@ -17,6 +17,14 @@ public class Student {
     private Integer age;
     private List<SchoolSubject> subjectList = new ArrayList<>();
 
+    public Student() {}
+    public Student(String name, String surname, Integer age) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+    }
+
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

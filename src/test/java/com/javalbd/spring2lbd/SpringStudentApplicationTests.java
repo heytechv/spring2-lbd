@@ -1,5 +1,7 @@
 package com.javalbd.spring2lbd;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javalbd.spring2lbd.entity.Student;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +37,38 @@ class SpringStudentApplicationTests {
     }
 
     @Test void addStudent() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/student/addstudent")
-                        .param("name", "imie")
-                        .param("surname", "nazw")
-                        .param("age", "23")
-                )
-                .andDo(print());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new Student("test", "test2", 43))))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
+
+    @Test void editStudent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/student/editstudent")
+                        .param("id", "1")
+                        .param("surname", "edit")
+                        .param("age", "32"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/all"))
+                .andExpect(jsonPath("$.[1].surname", Is.is("edit")));
+    }
+
+    @Test void deleteStudent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/student/deletestudent")
+                .param("id", "1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/all"))
+                .andExpect(jsonPath("$.[1].id", Is.is(2)));
+    }
+
+
+
 
 }

@@ -35,9 +35,9 @@ public class StudentController {
 //            @RequestParam("name")    String name,
 //            @RequestParam("surname") String surname,
 //            @RequestParam("age")     Integer age) {
-    public void addStudent(@RequestBody Student student) {
+    public void addStudent(@RequestBody StudentDto studentDto) {
 //        studentService.addStudent(name, surname, age);
-        studentService.addStudent(student);
+        studentService.addStudent(studentDto);
     }
 
     @PutMapping("/editstudent")

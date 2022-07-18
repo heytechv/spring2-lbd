@@ -44,12 +44,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override public void addTeacher(Teacher teacher) {
+        if (teacher.getId() == null)
+            teacher.setId((long) teacherList.size());
         teacherList.add(teacher);
     }
 
     @Override public void addTeacher(String name, String surname, SchoolSubject subject) {
         Teacher teacher = new Teacher();
-        teacher.setId((long)teacherList.size());
         teacher.setName(name);
         teacher.setSurname(surname);
         teacher.setSubject(subject);
@@ -76,8 +77,8 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     /** ------------------------------------------------------------------------------------ **
-     /** -- Mapper -------------------------------------------------------------------------- **
-     /** ------------------------------------------------------------------------------------ **/
+    /** -- Mapper -------------------------------------------------------------------------- **
+    /** ------------------------------------------------------------------------------------ **/
     public TeacherDto convertToDto(Teacher teacher) {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.setId(teacher.getId());

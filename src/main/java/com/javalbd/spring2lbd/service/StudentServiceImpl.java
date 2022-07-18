@@ -28,12 +28,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override public void addStudent(Student student) {
+        if (student.getId() == null)
+            student.setId((long) studentList.size());
         studentList.add(student);
     }
 
     @Override public void addStudent(String name, String surname, Integer age) {
         Student student = new Student();
-        student.setId((long)studentList.size());
         student.setName(name);
         student.setSurname(surname);
         student.setAge(age);
@@ -41,9 +42,12 @@ public class StudentServiceImpl implements StudentService {
         addStudent(student);
     }
 
+    @Override public void addStudent(StudentDto studentDto) {
+        addStudent(convertToEntity(studentDto));
+    }
+
     @Override public void addStudent(String name, String surname, Integer age, SchoolSubject... schoolSubjectList) {
         Student student = new Student();
-        student.setId((long)studentList.size());
         student.setName(name);
         student.setSurname(surname);
         student.setAge(age);
@@ -93,6 +97,17 @@ public class StudentServiceImpl implements StudentService {
         studentDto.setSubjectList(student.getSubjectList());
 
         return studentDto;
+    }
+
+    public Student convertToEntity(StudentDto studentDto) {
+        Student student = new Student();
+        student.setId(studentDto.getId());
+        student.setName(studentDto.getName());
+        student.setSurname(studentDto.getSurname());
+        student.setAge(studentDto.getAge());
+        student.setSubjectList(studentDto.getSubjectList());
+
+        return student;
     }
 
 
