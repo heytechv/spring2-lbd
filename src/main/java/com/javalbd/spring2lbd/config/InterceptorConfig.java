@@ -17,6 +17,4 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(authorizeInterceptor);
     }
 
-
-
 }

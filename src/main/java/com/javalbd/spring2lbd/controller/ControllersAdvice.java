@@ -1,6 +1,7 @@
 package com.javalbd.spring2lbd.controller;
 
 
+import com.javalbd.spring2lbd.apierror.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -27,25 +28,26 @@ public class ControllersAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotfound(EntityNotFoundException ex) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-        return ResponseEntity.badRequest().header("successful", "false").body(ex.getMessage());
+        ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Not found", ex);
+        return errorResponse.buildResponseEntity();
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return ResponseEntity.badRequest().header("successful", "false").body(ex.getMessage());
+
+        ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Missing param "+ex.getParameterName(), ex);
+        return errorResponse.buildResponseEntity();
     }
 
     /** Dla @Valid */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        if (ex.getFieldError() != null)
-            return ResponseEntity.badRequest().header("successful", "false")
-                    .body(ex.getFieldError().getDefaultMessage());
+        ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Validation error", ex);
+        errorResponse.addValidationErrors(ex.getBindingResult().getFieldErrors());
+        errorResponse.addValidationError(ex.getBindingResult().getGlobalError());
 
-        return ResponseEntity.badRequest().header("successful", "false")
-                .body(ex.getMessage());
+        return errorResponse.buildResponseEntity();
     }
 
 
