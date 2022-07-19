@@ -12,7 +12,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@ServletComponentScan
 public class Spring2LbdApplication {
 
     @Autowired private StudentService studentService;

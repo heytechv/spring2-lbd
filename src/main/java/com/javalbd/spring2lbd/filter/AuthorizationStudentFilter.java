@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-//@Component
-@Order(2)
-@WebFilter("/api/student/*")
+//@Component @Order(2) - wylaczone bo uzywam konfiguracji
+
+// TODO moze lepiej https://www.baeldung.com/spring-onceperrequestfilter ?
 public class AuthorizationStudentFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationStudentFilter.class);
