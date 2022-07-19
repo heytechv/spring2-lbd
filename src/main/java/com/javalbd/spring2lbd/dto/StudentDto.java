@@ -3,15 +3,16 @@ package com.javalbd.spring2lbd.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.javalbd.spring2lbd.component.SchoolSubject;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentDto {
 
     private Long id;
-    private String name;
-    private String surname;
-    private Integer age;
+    @NotNull(message = "Field 'name' cannot be null") private String name;
+    @NotNull private String surname;
+    @NotNull private Integer age;
     private List<SchoolSubject> schoolSubjectList;
 
 

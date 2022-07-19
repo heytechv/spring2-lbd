@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,7 @@ public class TeacherController {
 //            @RequestParam("name") String name,
 //            @RequestParam("surname") String surname,
 //            @RequestParam("subject") SchoolSubject subject) {
-    public void addTeacher(@RequestBody TeacherDto teacherDto) {
+    public void addTeacher(@Valid @RequestBody TeacherDto teacherDto) {
         teacherService.addTeacher(teacherDto);
     }
 

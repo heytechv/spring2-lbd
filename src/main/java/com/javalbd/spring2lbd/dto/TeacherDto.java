@@ -3,13 +3,15 @@ package com.javalbd.spring2lbd.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.javalbd.spring2lbd.component.SchoolSubject;
 
+import javax.validation.constraints.NotNull;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherDto {
 
     private Long id;
-    private String name;
-    private String surname;
-    private SchoolSubject schoolSubject;
+    @NotNull private String name;
+    @NotNull private String surname;
+    @NotNull private SchoolSubject schoolSubject;
 
 
     public Long getId() { return id; }

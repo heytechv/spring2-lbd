@@ -30,6 +30,7 @@ public class StudentServiceImpl implements StudentService {
     @Override public void addStudent(Student student) {
         if (student.getId() == null)
             student.setId((long) studentList.size());
+
         studentList.add(student);
     }
 

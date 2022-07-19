@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class StudentController {
 //            @RequestParam("name")    String name,
 //            @RequestParam("surname") String surname,
 //            @RequestParam("age")     Integer age) {
-    public void addStudent(@RequestBody StudentDto studentDto) {
+    public void addStudent(@Valid @RequestBody StudentDto studentDto) {
 //        studentService.addStudent(name, surname, age);
         studentService.addStudent(studentDto);
     }
