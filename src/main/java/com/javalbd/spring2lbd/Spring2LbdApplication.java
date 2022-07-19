@@ -3,6 +3,8 @@ package com.javalbd.spring2lbd;
 import com.javalbd.spring2lbd.component.SchoolSubject;
 import com.javalbd.spring2lbd.service.StudentService;
 import com.javalbd.spring2lbd.service.TeacherService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +14,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@OpenAPIDefinition(info = @Info(title = "REST API spring2-lbd", description = "REST API dla LBD :)"))  // zmiana nazewnictwa https://stackoverflow.com/questions/72037222/springdoc-openapi-ui-swagger-3-change-api-description
 public class Spring2LbdApplication {
 
     @Autowired private StudentService studentService;
