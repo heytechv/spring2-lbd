@@ -12,6 +12,7 @@ public interface TeacherService {
     List<TeacherDto> getAllTeachers();
     TeacherDto getTeacher(Long id);
     SchoolSubject getTeacherClass(Long id);
+    TeacherDto getTeacherClassAsDto(Long id);
 
     void addTeacher(Teacher teacher);
     void addTeacher(TeacherDto teacherDto);
@@ -21,5 +22,11 @@ public interface TeacherService {
 
     void deleteStudentFromClassByTeacherId(Long teacherId, Long studentId);
 
+
+    /** ------------------------------------------------------------------------------------ **
+    /** -- Mapper -------------------------------------------------------------------------- **
+    /** ------------------------------------------------------------------------------------ **/
+    TeacherDto convertToDto(Teacher teacher);
+    Teacher convertToEntity(TeacherDto teacherDto);
 
 }

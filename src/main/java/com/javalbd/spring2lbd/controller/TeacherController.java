@@ -33,10 +33,11 @@ public class TeacherController {
     }
 
     @GetMapping("/getteacherclass")
-    public ResponseEntity<SchoolSubject> getTeacherClass(@RequestParam("id") Long id) {
+//    public ResponseEntity<SchoolSubject> getTeacherClass(@RequestParam("id") Long id) {
+    public ResponseEntity<TeacherDto> getTeacherClass(@RequestParam("id") Long id) {
         return ResponseEntity.ok()
                 .header("successful", "true")
-                .body(teacherService.getTeacherClass(id));
+                .body(teacherService.getTeacherClassAsDto(id));
     }
 
     @PostMapping("/addteacher")

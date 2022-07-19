@@ -43,6 +43,12 @@ public class TeacherServiceImpl implements TeacherService {
         return findById(id).getSubject();
     }
 
+    @Override public TeacherDto getTeacherClassAsDto(Long id) {
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setSubject(getTeacherClass(id));
+        return teacherDto;
+    }
+
     @Override public void addTeacher(Teacher teacher) {
         if (teacher.getId() == null)
             teacher.setId((long) teacherList.size());
@@ -95,6 +101,6 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setSurname(teacherDto.getSurname());
         teacher.setSubject(teacherDto.getSubject());
         return teacher;
-
     }
+
 }

@@ -14,6 +14,14 @@ public class Teacher {
     private String surname;
     private SchoolSubject subject;
 
+    public Teacher() {}
+    public Teacher(String name, String surname,  SchoolSubject subject) {
+        this.name = name;
+        this.surname = surname;
+        this.subject = subject;
+
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

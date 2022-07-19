@@ -13,7 +13,6 @@ public class TeacherDto {
     @NotNull private String surname;
     @NotNull private SchoolSubject schoolSubject;
 
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
