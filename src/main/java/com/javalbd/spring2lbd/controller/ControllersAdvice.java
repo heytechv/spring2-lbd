@@ -4,6 +4,7 @@ package com.javalbd.spring2lbd.controller;
 import com.javalbd.spring2lbd.apierror.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.MissingRequiredPropertiesException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,13 @@ import javax.persistence.EntityNotFoundException;
  * <a href="https://reflectoring.io/spring-boot-exception-handling/">...</a> */
 
 @ControllerAdvice
-//@Order(Ordered.HIGHEST_PRECEDENCE)
-//public class ControllersAdvice  {
 public class ControllersAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(MissingRequiredPropertiesException.class)
+    public ResponseEntity<Object> handleMissingRequiredProperties(MissingRequiredPropertiesException ex) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Missing param(s)", ex);
+        return errorResponse.buildResponseEntity();
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotfound(EntityNotFoundException ex) {
@@ -34,7 +39,6 @@ public class ControllersAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
         ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Missing param "+ex.getParameterName(), ex);
         return errorResponse.buildResponseEntity();
     }
@@ -42,7 +46,6 @@ public class ControllersAdvice extends ResponseEntityExceptionHandler {
     /** Dla @Valid */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
         ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.BAD_REQUEST, "Validation error", ex);
         errorResponse.addValidationErrors(ex.getBindingResult().getFieldErrors());
         errorResponse.addValidationError(ex.getBindingResult().getGlobalError());

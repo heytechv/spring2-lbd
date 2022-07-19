@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <a href="https://www.toptal.com/java/spring-boot-rest-api-error-handling">...</a> */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiErrorResponse {
 

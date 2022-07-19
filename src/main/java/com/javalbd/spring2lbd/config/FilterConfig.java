@@ -18,7 +18,7 @@ public class FilterConfig {
         return registrationBean;
     }
 
-    /** Zad 21 - zakomentowac te i zrobic AuthorizationService */
+    /** Zad 21 - zakomentowac te i zrobic AuthorizationService + Interceptor */
 //    @Bean public FilterRegistrationBean<AuthorizationStudentFilter> filterStudent() {
 //        FilterRegistrationBean<AuthorizationStudentFilter> registrationBean = new FilterRegistrationBean<>();
 //        registrationBean.setFilter(new AuthorizationStudentFilter());

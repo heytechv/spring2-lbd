@@ -1,9 +1,15 @@
 package com.javalbd.spring2lbd.service;
 
 import com.javalbd.spring2lbd.component.SchoolSubject;
+import com.javalbd.spring2lbd.dto.EditStudentDto;
 import com.javalbd.spring2lbd.dto.StudentDto;
 import com.javalbd.spring2lbd.entity.Student;
+import org.springframework.core.MethodParameter;
+import org.springframework.core.env.MissingRequiredPropertiesException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 
 import javax.persistence.EntityNotFoundException;
 import java.text.MessageFormat;
@@ -67,8 +73,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override public void editStudent(Long id, String surname, Integer age) {
         Student student = findById(id);
-        student.setSurname(surname);
-        student.setAge(age);
+        if (surname != null)
+            student.setSurname(surname);
+        if (age != null)
+            student.setAge(age);
+    }
+
+    @Override public void editStudent(EditStudentDto editStudentDto) {
+        editStudent(editStudentDto.getEditId(), editStudentDto.getSurname(), editStudentDto.getAge());
     }
 
     @Override public void deleteStudent(Long id) {

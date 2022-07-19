@@ -45,6 +45,7 @@ public class TeacherController {
 //            @RequestParam("name") String name,
 //            @RequestParam("surname") String surname,
 //            @RequestParam("subject") SchoolSubject subject) {
+    /** @Valid odnosie sie do @NotNull w TeacherDto.class */
     public void addTeacher(@Valid @RequestBody TeacherDto teacherDto) {
         teacherService.addTeacher(teacherDto);
     }

@@ -1,5 +1,6 @@
 package com.javalbd.spring2lbd.controller;
 
+import com.javalbd.spring2lbd.dto.EditStudentDto;
 import com.javalbd.spring2lbd.dto.StudentDto;
 import com.javalbd.spring2lbd.entity.Student;
 import com.javalbd.spring2lbd.service.StudentService;
@@ -36,18 +37,20 @@ public class StudentController {
 //            @RequestParam("name")    String name,
 //            @RequestParam("surname") String surname,
 //            @RequestParam("age")     Integer age) {
+    /** @Valid odnosie sie do @NotNull w StudentDto.class */
     public void addStudent(@Valid @RequestBody StudentDto studentDto) {
 //        studentService.addStudent(name, surname, age);
         studentService.addStudent(studentDto);
     }
 
     @PutMapping("/editstudent")
-    public void editStudent(
-            @RequestParam("id")      Long id,
-            @RequestParam("surname") String surname,
-            @RequestParam("age")     Integer age ) {
-
-        studentService.editStudent(id, surname, age);
+//    public void editStudent(
+//            @RequestParam("id")      Long id,
+//            @RequestParam("surname") String surname,
+//            @RequestParam("age")     Integer age ) {
+    public void editStudent(@Valid @RequestBody EditStudentDto editStudentDto) {
+//        studentService.editStudent(id, surname, age);
+        studentService.editStudent(editStudentDto);
     }
 
     @DeleteMapping("/deletestudent")

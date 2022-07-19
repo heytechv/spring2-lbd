@@ -1,8 +1,10 @@
 package com.javalbd.spring2lbd.service;
 
 import com.javalbd.spring2lbd.component.SchoolSubject;
+import com.javalbd.spring2lbd.dto.EditStudentDto;
 import com.javalbd.spring2lbd.dto.StudentDto;
 import com.javalbd.spring2lbd.entity.Student;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ public interface StudentService {
     void addStudent(String name, String surname, Integer age, SchoolSubject... schoolSubjectList);
 
     void editStudent(Long id, String surname, Integer age);
+    void editStudent(EditStudentDto editStudentDto);
+
     void deleteStudent(Long id);
 
     void assignToSubject(Long studentId, SchoolSubject subject);
