@@ -25,9 +25,9 @@ public class AuthorizationTeacherFilter implements Filter {
         LOGGER.info("Teacher");
 
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        String roleHeader = httpRequest.getHeader("role");
+        String headerRole = httpRequest.getHeader("role");
 
-        if (roleHeader == null || !roleHeader.equals(AuthRole.TEACHER_ROLE.toString())) {
+        if (headerRole == null || !headerRole.equals(AuthRole.TEACHER_ROLE.toString())) {
             HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
             httpResponse.setContentType(MediaType.APPLICATION_JSON.toString());
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

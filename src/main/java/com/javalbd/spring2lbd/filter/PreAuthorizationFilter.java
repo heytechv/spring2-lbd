@@ -17,7 +17,7 @@ public class PreAuthorizationFilter implements Filter {
      * <a href="https://stackoverflow.com/questions/42857658/how-to-log-time-taken-by-rest-web-service-in-spring-boot">...</a> */
     @Override public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        LOGGER.info("PRE");
+        LOGGER.info("Pre");
 
         Instant instantStart = Instant.now();
 

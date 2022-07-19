@@ -18,21 +18,22 @@ public class FilterConfig {
         return registrationBean;
     }
 
-    @Bean public FilterRegistrationBean<AuthorizationStudentFilter> filterStudent() {
-        FilterRegistrationBean<AuthorizationStudentFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new AuthorizationStudentFilter());
-        registrationBean.setOrder(2);
-        registrationBean.addUrlPatterns("/api/student/*");
-
-        return registrationBean;
-    }
-
-    @Bean public FilterRegistrationBean<AuthorizationTeacherFilter> filterTeacher() {
-        FilterRegistrationBean<AuthorizationTeacherFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new AuthorizationTeacherFilter());
-        registrationBean.setOrder(2);
-        registrationBean.addUrlPatterns("/api/teacher/*");
-
-        return registrationBean;
-    }
+    /** Zad 21 - zakomentowac te i zrobic AuthorizationService */
+//    @Bean public FilterRegistrationBean<AuthorizationStudentFilter> filterStudent() {
+//        FilterRegistrationBean<AuthorizationStudentFilter> registrationBean = new FilterRegistrationBean<>();
+//        registrationBean.setFilter(new AuthorizationStudentFilter());
+//        registrationBean.setOrder(2);
+//        registrationBean.addUrlPatterns("/api/student/*");
+//
+//        return registrationBean;
+//    }
+//
+//    @Bean public FilterRegistrationBean<AuthorizationTeacherFilter> filterTeacher() {
+//        FilterRegistrationBean<AuthorizationTeacherFilter> registrationBean = new FilterRegistrationBean<>();
+//        registrationBean.setFilter(new AuthorizationTeacherFilter());
+//        registrationBean.setOrder(2);
+//        registrationBean.addUrlPatterns("/api/teacher/*");
+//
+//        return registrationBean;
+//    }
 }
