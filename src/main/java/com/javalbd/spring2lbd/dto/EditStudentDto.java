@@ -15,6 +15,13 @@ public class EditStudentDto {
     private String surname;
     private Integer age;
 
+    public EditStudentDto() { }
+
+    public EditStudentDto (Long editId, String surname, Integer age) {
+        this.editId=editId;
+        this.surname=surname;
+        this.age=age;
+    }
 
     public Long getEditId() { return editId; }
     public void setEditId(Long editId) { this.editId = editId; }

@@ -2,6 +2,7 @@ package com.javalbd.spring2lbd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javalbd.spring2lbd.component.AuthRole;
+import com.javalbd.spring2lbd.dto.EditStudentDto;
 import com.javalbd.spring2lbd.entity.Student;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SpringStudentApplicationTests {
 
     @Autowired private MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
 
     @Test void getStudentAllUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/student/all"))
@@ -45,8 +47,6 @@ class SpringStudentApplicationTests {
     }
 
     @Test void addStudent() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/student/addstudent")
                         .header("role", AuthRole.STUDENT_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -58,9 +58,8 @@ class SpringStudentApplicationTests {
     @Test void editStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/student/editstudent")
                         .header("role", AuthRole.STUDENT_ROLE)
-                        .param("id", "3")
-                        .param("surname", "edit")
-                        .param("age", "32"))
+                        .contentType(MediaType.APPLICATION_JSON.toString())
+                        .content(objectMapper.writeValueAsString(new EditStudentDto(3L, "editNazw", 42))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
