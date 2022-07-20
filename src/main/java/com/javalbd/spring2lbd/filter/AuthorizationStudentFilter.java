@@ -31,6 +31,7 @@ public class AuthorizationStudentFilter implements Filter {
         String headerRole = httpRequest.getHeader("role");
 
         if (headerRole == null || !Arrays.asList(AuthRole.TEACHER_ROLE.toString(), AuthRole.STUDENT_ROLE.toString()).contains(headerRole)) {
+            // TODO tutaj chyba lepiej throw i obsluzyc
             HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.setContentType(MediaType.APPLICATION_JSON.toString());

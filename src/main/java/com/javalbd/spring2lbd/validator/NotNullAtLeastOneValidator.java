@@ -23,26 +23,29 @@ public class NotNullAtLeastOneValidator implements ConstraintValidator<NotNullAt
         // Bierzemy obiekt
         BeanWrapperImpl beanWrapper = new BeanWrapperImpl(object);
 
-        // Iterujemy (czy jakis jest uzupelniony)
+        // Iterujemy (czy jakies jest uzupelnione)
         for (String fieldName : fieldNames) {
 
-            // Czy pole podane w @NotNullAtLeastOne istnieje
+            // Czy pole podane w @NotNullAtLeastOne(pole) istnieje
             if (!beanWrapper.isReadableProperty(fieldName))
                 throw new IllegalArgumentException("@NotNullAtLeastOne requires valid field");;
             // Wartosc
             Object fieldValue = beanWrapper.getPropertyValue(fieldName);
-            // jak null to isValid nie przeszlo
+            // jak wszystkie pola null to isValid nie przeszlo
+            // jak chociaz jedno nie null to git
             if (fieldValue != null)
                 return true;
 
-            // Wylaczamy domyslny error (bo pokazuje tylko nazwe klasy a field jest null wiec useless)
+            // Wylaczamy domyslny error (bo pokazuje tylko nazwe klasy a nazwa field jest null wiec useless)
             constraintValidatorContext.disableDefaultConstraintViolation();
-            // Dodajemy pola ktore brakuja
+            // Dodajemy pola ktore sa null
             constraintValidatorContext
                     .buildConstraintViolationWithTemplate(constraintValidatorContext.getDefaultConstraintMessageTemplate())
                     .addPropertyNode(fieldName).addConstraintViolation();
         }
 
+        // Jak nie przeszlo validacji to zwracamy false, a pola ktore dodalismy do constraintValidatorContext
+        // zostana pokazane w bledzie (obsluga bledu w ControllersAdvice.java)
         return false;
     }
 
