@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "345548f7-40d5-4cda-8299-01ebc0cc6bd5",
+		"name": "spring2-lbd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22094303"
+	},
+	"item": [
+		{
+			"name": "student->all",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/student/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"student",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "student->getstudent",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "role",
+						"value": "STUDENT_ROLE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/student/getstudent?id=9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"student",
+						"getstudent"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "student->addstudent",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "role",
+						"value": "STUDENT_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Imiedod\",\r\n    \"surname\": \"NazDod\",\r\n    \"age\": 23,\r\n    \"subjectList\": [\r\n        \"LAW\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/student/addstudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"student",
+						"addstudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "student->deletestudent",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "role",
+						"value": "STUDENT_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/student/deletestudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"student",
+						"deletestudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "student->editstudent",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "role",
+						"value": "STUDENT_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"editId\": 2,\r\n    \"age\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/student/editstudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"student",
+						"editstudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->all",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->getteacher",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/getteacher",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"getteacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->getteacherclass",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/getteacherclass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"getteacherclass"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->addteacher",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"ImieDod\",\r\n    \"surname\": \"NazDod\",\r\n    \"subject\": \"BIOLOGY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/addteacher",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"addteacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->deleteteacher",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/deleteteacher",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"deleteteacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacher->deletestudentfromclass",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "role",
+						"value": "TEACHER_ROLE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "teacherId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "studentId",
+							"value": "9",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/teacher/deletestudentfromclass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"teacher",
+						"deletestudentfromclass"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
