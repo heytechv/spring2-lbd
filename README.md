@@ -176,5 +176,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 ### 6. Postman
 Konfiguracja w `docs/Postman`.<br/>
 Raz wywołujemy `GET /api/login` i sesja jest zapamiętana, można wykonywać inne zapytania do różnych endpointów.
-
-
