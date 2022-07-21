@@ -1,1 +1,2 @@
-https://www.javaguides.net/2021/04/spring-boot-dto-validation-example.html
+## Postman
+W postmanie zapisuje cookie, więc najlepiej włączyć opcję "Settings->Disable cookie jar"

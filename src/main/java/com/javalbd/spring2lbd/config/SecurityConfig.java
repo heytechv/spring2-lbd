@@ -23,17 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .httpBasic();
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/whoami").hasAnyRole("USER", "ADMIN")
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin();
     }
 
 
-    @Bean // nie zapomninac o tym xd
-    @Override protected UserDetailsService userDetailsService() {
+    @Bean @Override protected UserDetailsService userDetailsService() {
 
         /** Zad 9 */
 //        UserDetails user = User.withUsername("user")
