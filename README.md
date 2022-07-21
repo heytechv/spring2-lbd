@@ -1,11 +1,13 @@
 ## Useful links
 - [Spring Security Full Course](https://www.youtube.com/watch?v=her_7pa0vrg)
 - [Spring Security + JWT Token](https://www.youtube.com/watch?v=and2DR_N6tE)
+- [Spring Security credentials from JSON request](https://ckinan.com/blog/spring-security-credentials-from-json-request/)
 
 __________
 
-## Etap 1 - Json Object Authentication
+## Json Object Authentication
 ### Możliwość logowania się (uwierzytelniania) przy pomocy JsonBody w request
+
 ### UWAGA!
 #### Domyślnie `UsernamePasswordAuthenticationFilter` działa tylko dla `GET "/login"`<br/> jak mamy inne to zmieniamy dodajac w `SecurityConfig.java` w filtrze `authenticationJsonFilter()` (niżej jest pokazane)
 
@@ -18,7 +20,7 @@ __________
 }
 ```
 #### wtedy pozostałe endpointy powinny działać dobrze
-__________
+
 ### 1. Maven
 - [JJWT Library](https://github.com/jwtk/jjwt)
 ```xml
@@ -74,9 +76,8 @@ public class LoginController {
      *      UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
      *      jak mamy inne to zmieniamy dodajac w SecurityConfig.java w filtrze authenticationJsonFilter()
      *          jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login"); */
-    @GetMapping("/api/login")
+    @PostMapping("/api/login")
     public void login(@RequestBody LoginCredentials credentials) { }
-
 }
 ```
 
@@ -114,9 +115,15 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
 @Component
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final Logger log = LoggerFactory.getLogger(AuthenticationSuccessHandler.class);
+
     @Override public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        log.warn("OK auth");
+        response.getWriter().write("Signed in successfully");
+
         clearAuthenticationAttributes(request);
     }
+
 }
 ```
 
@@ -136,7 +143,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
 ```java
 @Configuration
 @EnableWebSecurity(debug = false)                                      // enable WebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)      // enable @PreAuthorize("hasAnyRole(...)")
+@EnableGlobalMethodSecurity(prePostEnabled = true)      // enable @PreAuthorize("hasAnyRole(...)")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /** Wstrzykujemy handlery */
@@ -148,19 +155,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("user")
                 .password(encoder().encode("user"))
-                .authorities(UserPermission.USER_READ.name());
+                .authorities(UserPermission.ADMIN.name());
     }
 
     @Override protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
 
+                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
@@ -172,10 +180,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         jsonObjectAuthenticationFilter.setAuthenticationSuccessHandler(successHandler);
         jsonObjectAuthenticationFilter.setAuthenticationFailureHandler(failureHandler);
         // domyslny authenticationManager
-        jsonObjectAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+        jsonObjectAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
 
         /** UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
-            jak mamy inne to zmieniamy tutaj */
+         jak mamy inne to zmieniamy tutaj */
         jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
         return jsonObjectAuthenticationFilter;

@@ -7,6 +7,7 @@ import com.javalbd.spring2lbd.security.UserPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity(debug = false)                                      // enable WebSecurity
@@ -32,19 +34,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("user")
                 .password(encoder().encode("user"))
-                .authorities(UserPermission.USER_READ.name());
+                .authorities(UserPermission.ADMIN.name());
     }
 
     @Override protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
 
+                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
@@ -56,11 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         jsonObjectAuthenticationFilter.setAuthenticationSuccessHandler(successHandler);
         jsonObjectAuthenticationFilter.setAuthenticationFailureHandler(failureHandler);
         // domyslny authenticationManager
-        jsonObjectAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+        jsonObjectAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
 
         /** UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
             jak mamy inne to zmieniamy tutaj */
-//        jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
         return jsonObjectAuthenticationFilter;
     }
