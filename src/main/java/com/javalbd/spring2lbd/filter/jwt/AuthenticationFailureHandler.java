@@ -1,4 +1,4 @@
-package com.javalbd.spring2lbd.jwt;
+package com.javalbd.spring2lbd.filter.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

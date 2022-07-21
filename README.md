@@ -6,21 +6,15 @@
 #### Konfiguracja do Postmana w `docs/Postman`
 __________
 
-## Json Object Authentication
-### Możliwość logowania się (uwierzytelniania) przy pomocy JsonBody w request
+## JWT Authentication
 
 ### UWAGA!
-#### Domyślnie `UsernamePasswordAuthenticationFilter` działa tylko dla `GET "/login"`<br/> jak mamy inne to zmieniamy dodajac w `SecurityConfig.java` w filtrze `authenticationJsonFilter()` (niżej jest pokazane)
+#### Korzysta z kodu z `branch 1-security-jsonObject` (tam wyjaśnione też parę rzeczy, warto zajrzeć)
 
-### UWAGA!
-#### W Postmanie musimy włączyć pliki cookie (odznaczamy opcję `Settings->Disable cookie jar`), następnie możemy raz wywołać `GET /api/login` z JSON body:
-```json
-{
-    "username": "user",
-    "password": "user"
-}
-```
-#### wtedy pozostałe endpointy powinny działać dobrze
+### Potrzebne są dwa filtry:
+- Filtr wywoływany raz - autoryzujacy (jak sie zgadzaja dane to successHandler i generujemy token)
+- Filtr wywoływany za każdym razem - werfikuje token otrzymany z połączeniem czy jest on poprawny
+
 
 ### 1. Maven
 - [JJWT Library](https://github.com/jwtk/jjwt)
@@ -46,71 +40,10 @@ __________
 </dependencies>
 ```
 
-### 2. Tworzymy klasę, na którą będzie mapowany JSON
-*LoginCredentials.java*
-```java
-public class LoginCredentials {
-    private String username;
-    private String password;
 
-    public LoginCredentials() { }
+### 2. Edytujemy SuccessHandler (żeby zwracał token JWT po poprawnej autoryzacji)
+Zamiast tworzyć sesję ma zwracać token JWT
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-}
-```
-
-### 3. Dodajemy controller do logowania
-#### Za uwierzytelnianie bedzie odpowiadal filtr, ta metoda jest zeby w swaggerze byla widoczna
-
-*LoginController.java*
-```java
-@RestController
-public class LoginController {
-
-    private final Logger log = LoggerFactory.getLogger(LoginController.class);
-
-    /** Za uwierzytelnianie bedzie odpowiadal filtr, ta metoda jest zeby w swaggerze byla widoczna
-     *      UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
-     *      jak mamy inne to zmieniamy dodajac w SecurityConfig.java w filtrze authenticationJsonFilter()
-     *          jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login"); */
-    @PostMapping("/api/login")
-    public void login(@RequestBody LoginCredentials credentials) { }
-}
-```
-
-### 4. Tworzymy filtr dla JSON
-#### Filtr pozwoli na uwierzytelnianie przez JSON zamiast przez formularz http. Mapujemy w nim JSON na nasz obiekt i sprawdzamy dane za bazy przy pomocy `getAuthenticationManager()` (dane/baza ustawione w SecurityConfig.java)
-*JsonObjectAuthenticationFilter.java*
-```java
-public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    @Override public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
-        try {
-            // Mapujemy json JWT na nasza klase LoginCredentials
-            LoginCredentials authRequest = new ObjectMapper().readValue(request.getInputStream(), LoginCredentials.class);
-            // Tworzymy token
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    authRequest.getUsername(),
-                    authRequest.getPassword()
-            );
-            // Przekazujemy token dalej do Details oraz AuthenticationManager
-            setDetails(request, token);
-            return this.getAuthenticationManager().authenticate(token);
-
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-    }
-
-}
-```
-
-### 5. Tworzymy handlery dla success i failure
 *AuthenticationSuccessHandler.java*
 ```java
 @Component
@@ -118,28 +51,93 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
 
     private final Logger log = LoggerFactory.getLogger(AuthenticationSuccessHandler.class);
 
+    // Wstrzykumey z 'application.properties'
+    @Value("${jwt.expirationTimeMillis}") private long expirationTimeMillis;
+    @Value("${jwt.secret}")               private String secret;
+
+
     @Override public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        log.warn("OK auth");
-        response.getWriter().write("Signed in successfully");
 
-        clearAuthenticationAttributes(request);
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+
+        // Pobieramy nasze UserDetails
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        // Tworzymy token (co ma zawierac)
+        String token = Jwts.builder()
+                .setSubject(principal.getUsername())
+                .claim("authorities", authentication.getAuthorities())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis))
+                .signWith(secretKey)
+                .compact();
+        // Zwracamy token w headerze
+        response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
     }
 
 }
 ```
 
-*AuthenticationFailureHandler.java*
+### 3. Sprawdzanie tokena przy każdym zapytaniu
+Jak otrzymamy tokena z `AuthenticationSuccessHandler.class`, możemy go wysyłać z kolejnymi requestami<br/>
+Potrzebujemy mechanizm, który przechwyci nam token i zweryfikuje jego poprawność
+
+*JWTAuthorizationFilter.java*
 ```java
-@Component
-public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    @Override public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        super.onAuthenticationFailure(request, response, exception);
+    private static final String TOKEN_HEADER = HttpHeaders.AUTHORIZATION;
+    private static final String TOKEN_PREFIX = "Bearer ";
+
+    private final UserDetailsService userDetailsService;
+    private final String secret;
+
+
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,  String secret) {
+        super(authenticationManager);
+
+        this.userDetailsService = userDetailsService;
+        this.secret = secret;
+
     }
+
+    @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        // Jak nie znalazlo/nie autoryzowalo to przykro :/, jedziemy dalej z filterChain.doFilter()
+        if (authentication != null) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+        // Sprawdzamy czy token istnieje
+        String token = request.getHeader(TOKEN_HEADER);
+        if (token == null || !token.startsWith(TOKEN_PREFIX))
+            return null;
+
+        // Odszyfrowujemy token
+        Jws<Claims> claimsJws = Jwts.parser()
+                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""));
+
+        Claims body = claimsJws.getBody();
+
+        String username = body.getSubject();
+        if (username == null)
+            return null;
+
+        // Pobieramy naszego uzytkownika
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        // Zwracamy
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+    }
+
 }
 ```
 
-### 6. Podpinanie wszystkiego w SecurityConfig.java
+### 4. Podłączamy filtr `JWTAuthorizationFilter.java` do konfiguracji `SecurityConfig.java`
 *SecurityConfig.java*
 ```java
 @Configuration
@@ -150,6 +148,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /** Wstrzykujemy handlery */
     @Autowired private AuthenticationSuccessHandler successHandler;
     @Autowired private AuthenticationFailureHandler failureHandler;
+
+    @Value("${jwt.secret}") private String secret;
 
 
     @Override protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -163,7 +163,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
 
-                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)                             // bezstanowa (weryfikujemy JWT token, wiec nic na serverze nie musimy przechowywac o sesji)
+                .and()
+
+                .addFilter(authenticationJsonFilter())                                                                  // filtr autoryzujacy (jak sie zgadzaja dane to successHandler i generujemy token)
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService(), secret))           // filtr, ktory werfikuje przy kazdym polaczeniu z tokenem czy jest on poprawny
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
@@ -184,7 +188,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         jsonObjectAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
 
         /** UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
-         jak mamy inne to zmieniamy tutaj */
+            jak mamy inne to zmieniamy tutaj */
         jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
         return jsonObjectAuthenticationFilter;
@@ -196,5 +200,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 }
 ```
+
+### 5. Konfiguracja
+*application.properties*
+```
+jwt.expirationTimeMillis=120000
+jwt.secret=secretKeyCreatedForAuthFiltersShouldBeOk
+```
+
+### 6. Postman
+Konfiguracja w `docs/Postman`.<br/>
+Wystarczy wywołać razm `GET /api/login`, żeby pozyskać token, i potem kopiujemy go do innych zapytań do headera:<br/>
+>Accept-Encoding:...<br/>
+>Authorization: Bearer eyJhbGciO
 
 

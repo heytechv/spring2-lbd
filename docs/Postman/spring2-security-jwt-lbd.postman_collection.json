@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "1045b9c0-193e-4c5d-869c-26d0b4ed074f",
-		"name": "spring2-security-jsonObject-lbd",
+		"_postman_id": "4d505c82-e10f-49dd-8a1a-a12a966442ff",
+		"name": "spring2-security-jwt-lbd",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22094303"
 	},
@@ -54,7 +54,13 @@
 					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpYXQiOjE2NTg0Mzk3OTUsImV4cCI6MTY1ODQzOTkxNX0.jieA2T-X9QGkHpFUxQnbSwEheJPB0nQyHOAhE-7QC4c",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "localhost:8080/api/user/getuser",
 					"host": [
@@ -73,8 +79,17 @@
 		{
 			"name": "user->updateuser",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpYXQiOjE2NTg0Mzk3OTUsImV4cCI6MTY1ODQzOTkxNX0.jieA2T-X9QGkHpFUxQnbSwEheJPB0nQyHOAhE-7QC4c",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "localhost:8080/api/user/updateuser",
 					"host": [
@@ -94,22 +109,16 @@
 			"name": "admin->getadmin",
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpYXQiOjE2NTg0Mzk3OTUsImV4cCI6MTY1ODQzOTkxNX0.jieA2T-X9QGkHpFUxQnbSwEheJPB0nQyHOAhE-7QC4c",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "localhost:8080/api/admin/getadmin",
 					"host": [
@@ -129,22 +138,16 @@
 			"name": "admin->createuser",
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpYXQiOjE2NTg0Mzk3OTUsImV4cCI6MTY1ODQzOTkxNX0.jieA2T-X9QGkHpFUxQnbSwEheJPB0nQyHOAhE-7QC4c",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "localhost:8080/api/admin/createuser",
 					"host": [
@@ -175,22 +178,16 @@
 			],
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpYXQiOjE2NTg0Mzk3OTUsImV4cCI6MTY1ODQzOTkxNX0.jieA2T-X9QGkHpFUxQnbSwEheJPB0nQyHOAhE-7QC4c",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "localhost:8080/api/admin/deleteuser",
 					"host": [

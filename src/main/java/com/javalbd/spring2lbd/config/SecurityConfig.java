@@ -1,10 +1,12 @@
 package com.javalbd.spring2lbd.config;
 
-import com.javalbd.spring2lbd.filter.JsonObjectAuthenticationFilter;
-import com.javalbd.spring2lbd.jwt.AuthenticationFailureHandler;
-import com.javalbd.spring2lbd.jwt.AuthenticationSuccessHandler;
+import com.javalbd.spring2lbd.filter.jwt.JWTAuthorizationFilter;
+import com.javalbd.spring2lbd.filter.jwt.JsonObjectAuthenticationFilter;
+import com.javalbd.spring2lbd.filter.jwt.AuthenticationFailureHandler;
+import com.javalbd.spring2lbd.filter.jwt.AuthenticationSuccessHandler;
 import com.javalbd.spring2lbd.security.UserPermission;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,7 +20,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity(debug = false)                                      // enable WebSecurity
@@ -28,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /** Wstrzykujemy handlery */
     @Autowired private AuthenticationSuccessHandler successHandler;
     @Autowired private AuthenticationFailureHandler failureHandler;
+
+    @Value("${jwt.secret}") private String secret;
 
 
     @Override protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,7 +44,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
 
-                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)                             // bezstanowa (weryfikujemy JWT token, wiec nic na serverze nie musimy przechowywac o sesji)
+                .and()
+
+                .addFilter(authenticationJsonFilter())                                                                  // filtr autoryzujacy (jak sie zgadzaja dane to successHandler i generujemy token)
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService(), secret))           // filtr, ktory werfikuje przy kazdym polaczeniu z tokenem czy jest on poprawny
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
