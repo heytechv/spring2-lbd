@@ -22,31 +22,7 @@ __________
 ```
 #### wtedy pozostałe endpointy powinny działać dobrze
 
-### 1. Maven
-- [JJWT Library](https://github.com/jwtk/jjwt)
-```xml
-<dependencies>
-    <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-api</artifactId>
-        <version>0.11.5</version>
-    </dependency>
-    <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-impl</artifactId>
-        <version>0.11.5</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
-        <version>0.11.5</version>
-        <scope>runtime</scope>
-    </dependency>
-</dependencies>
-```
-
-### 2. Tworzymy klasę, na którą będzie mapowany JSON
+### 1. Tworzymy klasę, na którą będzie mapowany JSON
 *LoginCredentials.java*
 ```java
 public class LoginCredentials {
@@ -63,7 +39,7 @@ public class LoginCredentials {
 }
 ```
 
-### 3. Dodajemy controller do logowania
+### 2. Dodajemy controller do logowania
 #### Za uwierzytelnianie bedzie odpowiadal filtr, ta metoda jest zeby w swaggerze byla widoczna
 
 *LoginController.java*
@@ -82,7 +58,7 @@ public class LoginController {
 }
 ```
 
-### 4. Tworzymy filtr dla JSON
+### 3. Tworzymy filtr dla JSON
 #### Filtr pozwoli na uwierzytelnianie przez JSON zamiast przez formularz http. Mapujemy w nim JSON na nasz obiekt i sprawdzamy dane za bazy przy pomocy `getAuthenticationManager()` (dane/baza ustawione w SecurityConfig.java)
 *JsonObjectAuthenticationFilter.java*
 ```java
@@ -110,7 +86,7 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
 }
 ```
 
-### 5. Tworzymy handlery dla success i failure
+### 4. Tworzymy handlery dla success i failure
 *AuthenticationSuccessHandler.java*
 ```java
 @Component
@@ -139,7 +115,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
 }
 ```
 
-### 6. Podpinanie wszystkiego w SecurityConfig.java
+### 5. Podpinanie wszystkiego w SecurityConfig.java
 *SecurityConfig.java*
 ```java
 @Configuration
@@ -196,5 +172,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 }
 ```
+
+### 6. Postman
+Konfiguracja w `docs/Postman`.<br/>
+Raz wywołujemy `GET /api/login` i sesja jest zapamiętana, można wykonywać inne zapytania do różnych endpointów.
 
 

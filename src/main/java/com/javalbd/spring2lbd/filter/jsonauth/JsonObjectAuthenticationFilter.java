@@ -1,4 +1,4 @@
-package com.javalbd.spring2lbd.filter;
+package com.javalbd.spring2lbd.filter.jsonauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javalbd.spring2lbd.security.LoginCredentials;
