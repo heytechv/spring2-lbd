@@ -3,6 +3,7 @@
 - [Spring Security + JWT Token](https://www.youtube.com/watch?v=and2DR_N6tE)
 - [Spring Security credentials from JSON request](https://ckinan.com/blog/spring-security-credentials-from-json-request/)
 
+#### Konfiguracja do Postmana w `docs/Postman`
 __________
 
 ## Json Object Authentication
