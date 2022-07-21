@@ -1,94 +1,72 @@
 package com.javalbd.spring2lbd.config;
 
-import com.javalbd.spring2lbd.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.javalbd.spring2lbd.filter.JsonObjectAuthenticationFilter;
+import com.javalbd.spring2lbd.jwt.AuthenticationFailureHandler;
+import com.javalbd.spring2lbd.jwt.AuthenticationSuccessHandler;
 import com.javalbd.spring2lbd.security.UserPermission;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
-@EnableWebSecurity                                      // enable WebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)      // enable @PreAuthorize("hasAnyRole(...)")
+@EnableWebSecurity(debug = false)                                      // enable WebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)      // enable @PreAuthorize("hasAnyRole(...)")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /** Wstrzykujemy handlery */
+    @Autowired private AuthenticationSuccessHandler successHandler;
+    @Autowired private AuthenticationFailureHandler failureHandler;
+
+
     @Override protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("user")
+                .password(encoder().encode("user"))
+                .authorities(UserPermission.USER_READ.name());
     }
 
     @Override protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
-//                .httpBasic();
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/whoami").hasAnyRole("USER", "ADMIN")
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(authenticationJsonFilter())  // dodajemy nasz filtr
+                .exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
 
 
-    @Bean // nie zapomninac o tym xd
-    @Override protected UserDetailsService userDetailsService() {
+    @Bean public JsonObjectAuthenticationFilter authenticationJsonFilter() throws Exception {
+        JsonObjectAuthenticationFilter jsonObjectAuthenticationFilter = new JsonObjectAuthenticationFilter();
+        // ustawiamy successHandler oraz failureHandler
+        jsonObjectAuthenticationFilter.setAuthenticationSuccessHandler(successHandler);
+        jsonObjectAuthenticationFilter.setAuthenticationFailureHandler(failureHandler);
+        // domyslny authenticationManager
+        jsonObjectAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
 
-        /** Zad 9 */
-//        UserDetails user = User.withUsername("user")
-//                .password(encoder().encode("user"))
-//                .roles("user")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(encoder().encode("admin"))
-//                .roles("admin")
-//                .build();
+        /** UWAGA! Domyslnie UsernamePasswordAuthenticationFilter dziala tylko dla GET "/login"
+            jak mamy inne to zmieniamy tutaj */
+//        jsonObjectAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
-        /** Zad 15 */
-        UserDetails user = User.withUsername("user")
-                .password(encoder().encode("user"))
-                .authorities(UserPermission.USER_READ.name(), UserPermission.USER_EDIT.name())
-                .build();
-
-        UserDetails admin = User.withUsername("admin")
-                .password(encoder().encode("admin"))
-                .authorities(UserPermission.ADMIN.name())
-                .build();
-
-        UserDetails spectator = User.withUsername("spectator")
-                .password(encoder().encode("spectator"))
-                .authorities(UserPermission.USER_READ.name())
-                .build();
-
-
-        return new InMemoryUserDetailsManager(
-                user,
-                admin
-        );
+        return jsonObjectAuthenticationFilter;
     }
 
     @Bean public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(10);
     }
-
-
 
 }

@@ -18,7 +18,7 @@ public class UserController {
     }
 
 //    @PreAuthorize("hasAnyRole('user', 'admin')")
-    @PreAuthorize("hasAnyAuthority('USER_EDIT', 'ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('USER_EDIT', 'ADMIN')")
     @PutMapping("/updateuser")
     public String updateUser() {
         return "User updated!";
