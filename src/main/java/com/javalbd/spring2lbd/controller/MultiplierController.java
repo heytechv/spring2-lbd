@@ -11,7 +11,7 @@ public class MultiplierController {
     @Autowired MessageService messageService;
 
 
-    @PutMapping("/setmultiplier")
+    @PostMapping("/setmultiplier")
     public void getDecimal(@RequestParam("multiplier") Integer multiplier) {
         messageService.setMultiplier(multiplier);
     }

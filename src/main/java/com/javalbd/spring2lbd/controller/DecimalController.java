@@ -12,7 +12,7 @@ public class DecimalController {
     @Autowired MessageService messageService;
 
 
-    @PutMapping("/setdecimal")
+    @PostMapping("/setdecimal")
     public void getDecimal(@RequestParam("decimalPlaces") Integer decimalPlaces) {
         messageService.setDecimalPlaces(decimalPlaces);
     }

@@ -44,6 +44,7 @@ public class MessageService {
     }
 
     public ValuesDto getCalculatedValues() {
+        calculateValues();
         ValuesDto valuesDto = new ValuesDto();
         valuesDto.setValueOne(valueOne);
         valuesDto.setValueTwo(valueTwo);
