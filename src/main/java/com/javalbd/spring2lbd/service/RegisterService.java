@@ -1,16 +1,13 @@
 package com.javalbd.spring2lbd.service;
 
 import com.javalbd.spring2lbd.dto.CreateUserDto;
-import com.javalbd.spring2lbd.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
-
-import javax.naming.AuthenticationException;
 
 @Service
 public class RegisterService {
@@ -24,9 +21,9 @@ public class RegisterService {
     }
 
 
-    public void createUser(String username, String password, String[] authorities) throws UserAlreadyExistsException {
+    public void createUser(String username, String password, String[] authorities) {
         if (inMemoryUserDetailsManager.userExists(username))
-            throw new UserAlreadyExistsException();
+            throw new UsernameNotFoundException("Username '" + username + "' not found!");
 
         UserDetails userDetails = User.withUsername(username)
                 .password(passwordEncoder.encode(password))
@@ -37,7 +34,7 @@ public class RegisterService {
         inMemoryUserDetailsManager.createUser(userDetails);
     }
 
-    public void createUser(CreateUserDto createUserDto) throws UserAlreadyExistsException {
+    public void createUser(CreateUserDto createUserDto) {
         createUser(createUserDto.getUsername(), createUserDto.getPassword(), createUserDto.getAuthorities());
     }
 
