@@ -25,26 +25,20 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-//    @Override protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("")
-//    }
-
     @Override protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/api/decimal/setdecimal").hasAnyAuthority(PermissionType.DECIMAL_WRITE.name(), PermissionType.ACCESS_ALL.name())
+                .antMatchers("/api/decimal/setdecimal"      ).hasAnyAuthority(PermissionType.DECIMAL_WRITE.name(), PermissionType.ACCESS_ALL.name())
                 .antMatchers("/api/multiplier/setmultiplier").hasAnyAuthority(PermissionType.MULTIPLIER_WRITE.name(), PermissionType.ACCESS_ALL.name())
-
                 .anyRequest().permitAll()
 
                 .and()
                 .httpBasic()
+
                 .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
 
 
