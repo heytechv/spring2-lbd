@@ -44,10 +44,10 @@ public class UserService {
     }
 
     public void updatePassword(String username, String newPassword) {
-        UserDetails userDetails = inMemoryUserDetailsManager.loadUserByUsername(username);
         if (!doesUsernameExists(username))
             throw new UsernameNotFoundException("Username '" + username + "' not found!");
 
+        UserDetails userDetails = inMemoryUserDetailsManager.loadUserByUsername(username);
         inMemoryUserDetailsManager.updatePassword(userDetails, passwordEncoder.encode(newPassword));
     }
 

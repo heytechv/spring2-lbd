@@ -4,6 +4,7 @@ import com.javalbd.spring2lbd.dto.ValuesDto;
 import com.javalbd.spring2lbd.security.PermissionType;
 import com.javalbd.spring2lbd.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +17,18 @@ public class DecimalController {
 
 //    @PreAuthorize("hasAnyAuthority('DECIMAL_WRITE', 'ACCESS_ALL')")
     @PostMapping("/setdecimal")
-    public void getDecimal(@RequestParam("decimalPlaces") Integer decimalPlaces) {
+    public ResponseEntity<Object> getDecimal(@RequestParam("decimalPlaces") Integer decimalPlaces) {
         messageService.setDecimalPlaces(decimalPlaces);
+        return ResponseEntity.ok("ok");
     }
 
     @PreAuthorize("hasAnyAuthority('DECIMAL_READ', 'ACCESS_ALL')")
     @GetMapping("/getdecimal")
-    public Integer getDecimal() {
-        return messageService.getDecimalPlaces();
+    public ResponseEntity<Object> getDecimal() {
+        ValuesDto valuesDto = new ValuesDto();
+        valuesDto.setDecimalPlaces(messageService.getDecimalPlaces());
+
+        return ResponseEntity.ok(valuesDto);
     }
 
 }

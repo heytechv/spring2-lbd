@@ -54,8 +54,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .password(encoder().encode("admin"))
                 .authorities(PermissionType.ACCESS_ALL.name())
                 .build();
+
+        UserDetails decimal = User
+                .withUsername("decimal")
+                .password(encoder().encode("decimal"))
+                .authorities(PermissionType.DECIMAL_READ.name(), PermissionType.DECIMAL_WRITE.name())
+                .build();
+
+        UserDetails multi = User
+                .withUsername("multi")
+                .password(encoder().encode("multi"))
+                .authorities(PermissionType.MULTIPLIER_READ.name(), PermissionType.MULTIPLIER_WRITE.name())
+                .build();
+
         return new InMemoryUserDetailsManager(
-                admin
+                admin,
+                decimal,
+                multi
         );
     }
 

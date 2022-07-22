@@ -3,6 +3,7 @@ package com.javalbd.spring2lbd.controller;
 import com.javalbd.spring2lbd.dto.ValuesDto;
 import com.javalbd.spring2lbd.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +14,8 @@ public class NumberController {
 
 
     @GetMapping("/getcalculatedvalues")
-    public ValuesDto getCalculatedValues() {
-        return messageService.getCalculatedValues();
+    public ResponseEntity<ValuesDto> getCalculatedValues() {
+        return ResponseEntity.ok(messageService.getCalculatedValues());
     }
 
 }

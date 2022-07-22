@@ -3,6 +3,7 @@ package com.javalbd.spring2lbd.controller;
 import com.javalbd.spring2lbd.dto.CreateUserDto;
 import com.javalbd.spring2lbd.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +17,10 @@ public class RegisterController {
 
 
     @PostMapping("/register")
-    public void register(@Valid @RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<Object> register(@Valid @RequestBody CreateUserDto createUserDto) {
         registerService.createUser(createUserDto);
+
+        return ResponseEntity.ok("User created!");
     }
 
 }
