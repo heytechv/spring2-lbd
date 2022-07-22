@@ -4,6 +4,8 @@
 - [Spring Security credentials from JSON request](https://ckinan.com/blog/spring-security-credentials-from-json-request/)
 
 #### Konfiguracja do Postmana w `docs/Postman`
+
+#### // TODO drugi token dla refreshowania
 __________
 
 ## JWT Authentication
